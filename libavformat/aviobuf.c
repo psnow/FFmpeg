@@ -896,6 +896,27 @@ int avio_open2(AVIOContext **s, const char *filename, int flags,
     return 0;
 }
 
+int avio_open3(AVIOContext **s, const char *filename, int flags,
+               const AVIOInterruptCB *int_cb, AVDictionary **options, int offset)
+{
+	URLContext *h;
+	int err;
+
+	err = ffurl_open(&h, filename, flags, int_cb, options);
+	if (err < 0)
+		return err;
+
+	ffurl_seek(h, offset, SEEK_SET);
+	err = ffio_fdopen(s, h);
+	if (err < 0) {
+		ffurl_close(h);
+		return err;
+	}
+	return 0;
+
+}
+
+
 int avio_close(AVIOContext *s)
 {
     URLContext *h;
