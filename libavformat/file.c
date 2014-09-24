@@ -35,6 +35,8 @@
 #include "os_support.h"
 #include "url.h"
 
+extern int g_pos_offset;
+
 /* Some systems may not have S_ISFIFO */
 #ifndef S_ISFIFO
 #  ifdef S_IFIFO
@@ -171,6 +173,11 @@ static int64_t file_seek(URLContext *h, int64_t pos, int whence)
 {
     FileContext *c = h->priv_data;
     int64_t ret;
+	
+	if(whence == SEEK_SET){
+		pos += g_pos_offset;
+	}
+	
 
     if (whence == AVSEEK_SIZE) {
         struct stat st;

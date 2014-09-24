@@ -20,6 +20,7 @@
 *-example
 *-test
 *_g
+*~
 /.config
 /.version
 /ffmpeg
